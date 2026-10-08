@@ -1,0 +1,163 @@
+/* Shared, gentle motion for all KSIC designs. */
+:root {
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html { scroll-behavior: smooth; }
+
+/* Scroll reveal */
+.rv {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+  transition-delay: var(--d, 0s);
+}
+.rv.rv-left { transform: translateX(-32px); }
+.rv.rv-right { transform: translateX(32px); }
+.rv.rv-zoom { transform: scale(0.96); }
+.rv.in { opacity: 1; transform: none; }
+
+/* Hero intro — children rise one after another */
+.intro > * {
+  opacity: 0;
+  animation: ksic-rise 1s var(--ease) forwards;
+  animation-delay: calc(var(--i, 0) * 0.14s + 0.25s);
+}
+@keyframes ksic-rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Hero image settles in */
+.settle { animation: ksic-settle 2.6s var(--ease) both; }
+@keyframes ksic-settle {
+  from { opacity: 0; transform: scale(1.07); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Image zoom on hover */
+.zoom { overflow: hidden; }
+.zoom img { transition: transform 1.2s var(--ease); }
+.zoom:hover img, a:hover > .zoom img, article:hover .zoom img { transform: scale(1.06); }
+
+/* Arrow nudges on hover */
+.nudge svg { transition: translate 0.4s var(--ease); }
+.nudge:hover svg, a:hover .nudge svg { translate: 4px 0; }
+
+/* Soft lift on hover (uses `translate` so it never fights reveal transforms) */
+.lift {
+  transition: opacity 0.9s var(--ease) var(--d, 0s), transform 0.9s var(--ease) var(--d, 0s), translate 0.5s var(--ease), box-shadow 0.5s var(--ease);
+}
+.lift:hover { translate: 0 -6px; }
+
+/* Button sweep fill */
+.sweep { position: relative; overflow: hidden; isolation: isolate; }
+.sweep::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--sweep, currentColor);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.55s var(--ease);
+}
+.sweep:hover::before { transform: scaleX(1); transform-origin: left; }
+
+/* Gentle pulse ring (play buttons, badges) */
+.pulse { position: relative; }
+.pulse::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1px solid currentColor;
+  animation: ksic-pulse 2.4s var(--ease) infinite;
+}
+@keyframes ksic-pulse {
+  from { opacity: 0.7; transform: scale(1); }
+  to { opacity: 0; transform: scale(1.6); }
+}
+
+/* Slow float for decorative art */
+.float { animation: ksic-float 7s ease-in-out infinite; }
+@keyframes ksic-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Thin line that draws in */
+.draw { transform: scaleX(0); transform-origin: left; transition: transform 1.2s var(--ease) 0.3s; }
+.in .draw, .draw.in { transform: scaleX(1); }
+
+/* Header that firms up on scroll */
+.site-header { transition: background-color 0.5s var(--ease), box-shadow 0.5s var(--ease), padding 0.5s var(--ease), backdrop-filter 0.5s; }
+
+/* Underline grow on nav links */
+.ul { position: relative; }
+.ul::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transition: transform 0.45s var(--ease);
+}
+.ul:hover::after { transform: scaleX(1); }
+
+/* Mobile menu (button + full-screen panel are added by motion.js) */
+.menu-btn { display: none; place-content: center; gap: 5px; width: 40px; height: 40px; margin-right: -8px; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; }
+.menu-btn span { display: block; width: 22px; height: 1.5px; background: currentColor; transition: width 0.4s var(--ease); }
+.menu-btn span:nth-child(2) { width: 15px; justify-self: end; }
+.menu-btn:hover span:nth-child(2) { width: 22px; }
+@media (max-width: 960px) {
+  .menu-btn { display: grid; }
+}
+
+.menu-open { overflow: hidden; }
+.menu-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 6vw 30px;
+  overflow-y: auto;
+  background: var(--paper, var(--cream, var(--bg, #fbf7f1)));
+  color: var(--maroon, var(--ink));
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-14px);
+  transition: opacity 0.45s var(--ease), transform 0.45s var(--ease), visibility 0s linear 0.45s;
+}
+.menu-open .menu-panel { opacity: 1; visibility: visible; transform: none; transition: opacity 0.45s var(--ease), transform 0.45s var(--ease); }
+.menu-top { display: flex; justify-content: space-between; align-items: center; }
+.menu-top img { height: 46px; width: auto; }
+.menu-close { position: relative; width: 44px; height: 44px; margin-right: -10px; border: 0; background: none; color: inherit; cursor: pointer; }
+.menu-close span { position: absolute; left: 11px; right: 11px; top: 50%; height: 1.5px; background: currentColor; transform: rotate(45deg); }
+.menu-close span + span { transform: rotate(-45deg); }
+.menu-links { display: grid; margin: 6vh 0 0; }
+.menu-links a {
+  padding: 13px 0;
+  border-bottom: 1px solid var(--line, rgba(0, 0, 0, 0.1));
+  font-family: var(--serif, Georgia, serif);
+  font-size: 28px;
+  line-height: 1.2;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+}
+.menu-open .menu-links a { opacity: 1; transform: none; transition-delay: calc(var(--i) * 0.05s + 0.12s); }
+.menu-extra { display: flex; flex-wrap: wrap; gap: 10px 24px; margin-top: 26px; font-size: 14px; color: var(--muted, inherit); }
+.menu-extra:empty { display: none; }
+.menu-note { margin: auto 0 0; padding-top: 30px; font-size: 12px; letter-spacing: 0.06em; color: var(--muted, inherit); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .rv, .intro > * { opacity: 1 !important; transform: none !important; }
+  .draw { transform: none !important; }
+}

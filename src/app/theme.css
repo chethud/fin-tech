@@ -1,0 +1,9 @@
+
+      :root { --bg: #fffafa; --soft: #fdf1f3; --tint: #fbe9ed; --blush: #fbe6eb; --line: #f2dbe0; --accent: #efb3c3; --muted: #776166; }
+      .petal { position: absolute; top: -30px; z-index: 2; scale: 1.6; color: #ea93ab; fill: currentColor; opacity: 0; pointer-events: none; animation: petal-fall 16s linear infinite; }
+      @keyframes petal-fall {
+        0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+        10% { opacity: 0.85; }
+        100% { transform: translate(140px, 720px) rotate(340deg); opacity: 0; }
+      }
+    
